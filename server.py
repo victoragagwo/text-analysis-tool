@@ -1,8 +1,10 @@
 from flask import Flask, abort, request
 from stockAnalyze import getCompanyStockInfo
 from analyze import analyzeText
+from flask_cors import CORS
 
 app=Flask(__name__)
+CORS(app)
 
 @app.route('/health', methods=['GET'])
 def healthCheck():
