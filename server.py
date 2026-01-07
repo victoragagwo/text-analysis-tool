@@ -14,12 +14,20 @@ def healthCheck():
 
 @app.route('/analyze-stock/<ticker>', methods=['GET'])
 def analyzeStock(ticker):
-    # Temporarily return test data for all requests
-    try:
+    
+    if ticker == 'TEST':  # Optional: allow test data with TEST ticker
         with open('test/result.json', encoding='utf-8') as f:
             return json.load(f)
+    
+    if len(ticker) > 5 or not ticker.isidentifier():
+        abort(400, "Invalid ticker symbol")
+    try:
+        analysis = getCompanyStockInfo(ticker)
+    except NameError as e:
+        abort(404, e)
     except:
-        abort(500, "Could not load test data")
+        abort(500, "Something went wrong running the stock analysis.")
+    return analysis
 
 @app.route('/analyze-text', methods=['POST'])
 def analyzeTextHandler():
