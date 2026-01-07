@@ -6,7 +6,7 @@ import json
 import requests
 
 app=Flask(__name__)
-CORS(app)
+CORS(app, supports_credentials=True)
 
 @app.route('/health', methods=['GET'])
 def healthCheck():
@@ -47,4 +47,4 @@ def getQuotes():
         abort(500, "Failed to fetch quotes from external API")
 
 if __name__ == '__main__':
-    app.run()
+    app.run(host="0.0.0.0")
