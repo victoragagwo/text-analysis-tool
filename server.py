@@ -4,7 +4,6 @@ from analyze import analyzeText
 from flask_cors import CORS
 import json
 import requests
-import traceback
 
 app=Flask(__name__)
 CORS(app, supports_credentials=True)
@@ -25,11 +24,9 @@ def analyzeStock(ticker):
     try:
         analysis = getCompanyStockInfo(ticker)
     except NameError as e:
-        abort(404, str(e))
-    except Exception as e:
-        print(f"Error analyzing {ticker}: {str(e)}")
-        print(traceback.format_exc())
-        abort(500, f"Error: {str(e)}")
+        abort(404, e)
+    except:
+        abort(500, "Something went wrong running the stock analysis.")
     return analysis
 
 @app.route('/analyze-text', methods=['POST'])
