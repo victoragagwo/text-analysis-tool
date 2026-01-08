@@ -11,7 +11,6 @@ nltk.download('punkt_tab', quiet=True)
 nltk.download('vader_lexicon', quiet=True)
 nltk.download('stopwords', quiet=True)
 nltk.download('wordnet', quiet=True)
-nltk.download('averaged_perceptron_tagger', quiet=True)
 
 # Import after downloads
 from nltk.sentiment.vader import SentimentIntensityAnalyzer
@@ -112,17 +111,15 @@ def treebankPosToWordnetPos(partOfSpeech):
 
 # Convert raw list of (word, POS) tuple to a list of strings
 # that only include valid english words
-def cleanseWordList(posTaggedWordTuples):
+def cleanseWordList(words):
+    """Simplified version without POS tagging to avoid tagger issues"""
     cleansedWords = []
     invalidWordPattern = "[^a-zA-Z-+]"
-    for posTaggedWordTuple in posTaggedWordTuples:
-        word = posTaggedWordTuple[0]
-        pos = posTaggedWordTuple[1]
+    for word in words:
         cleansedWord = word.replace(".", "").lower()
         if (not re.search(invalidWordPattern, cleansedWord)) and len(cleansedWord) > 1 and cleansedWord not in stopWords:
-            cleansedWords.append(wordLemmatizer.lemmatize(cleansedWord, treebankPosToWordnetPos(pos)))
+            cleansedWords.append(wordLemmatizer.lemmatize(cleansedWord))
     return cleansedWords
-
 
 def analyzeText(textToAnalyze):
     articleSentences = tokenizeSentences(textToAnalyze)
@@ -134,8 +131,7 @@ def analyzeText(textToAnalyze):
     wordsPerSentence = getWordsPerSentence(articleSentences)
 
     #Get word Analytics
-    wordsPosTagged = nltk.pos_tag(articleWords)
-    articleWordsCleansed = cleanseWordList(wordsPosTagged)
+    articleWordsCleansed = cleanseWordList(articleWords)
 
     # Generate word cloud
     separator = " "
