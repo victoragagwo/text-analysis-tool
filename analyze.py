@@ -1,23 +1,28 @@
-from wordcloud import WordCloud
+import nltk
 import base64
 from io import BytesIO
 import json
-import nltk
-from nltk.sentiment.vader import SentimentIntensityAnalyzer
-nltk.download('vader_lexicon', quiet=True)
-sentimentAnalyzer = SentimentIntensityAnalyzer()
-from nltk.corpus import wordnet, stopwords
-nltk.download('stopwords', quiet=True)
-stopWords = set(stopwords.words('english'))
-from nltk.stem import WordNetLemmatizer
-nltk.download('wordnet', quiet=True)
-wordLemmatizer = WordNetLemmatizer()
-from nltk.corpus import wordnet
-nltk.download('averaged_perceptron_tagger', quiet=True)
 import re
+from wordcloud import WordCloud
 from random_username.generate import generate_username
+
+# Download all required NLTK data at startup
+nltk.download('punkt_tab', quiet=True)
+nltk.download('vader_lexicon', quiet=True)
+nltk.download('stopwords', quiet=True)
+nltk.download('wordnet', quiet=True)
+nltk.download('averaged_perceptron_tagger', quiet=True)
+
+# Import after downloads
+from nltk.sentiment.vader import SentimentIntensityAnalyzer
+from nltk.corpus import wordnet, stopwords
+from nltk.stem import WordNetLemmatizer
 from nltk.tokenize import word_tokenize, sent_tokenize
 
+# Initialize objects
+sentimentAnalyzer = SentimentIntensityAnalyzer()
+stopWords = set(stopwords.words('english'))
+wordLemmatizer = WordNetLemmatizer()
 
 #Welcome User
 def welcomeUser():
@@ -157,7 +162,7 @@ def analyzeText(textToAnalyze):
             "wordsPerSentence": round(wordsPerSentence, 1),
             "sentiment": sentimentResult,
             "wordCloudFilePath": wordCloudFilePath,
-			"wordCloudImage": encodedWordcloud,
+            "wordCloudImage": encodedWordcloud,
         },
         "metadata": {
             "sentencesAnalyzed": len(articleSentences),
@@ -175,4 +180,3 @@ def runAsFile():
     # Extract and Tokenize  Text
     articleTextRaw = getArticleText()
     analyzeText(articleTextRaw)
-
