@@ -6,6 +6,8 @@ import json
 import requests
 import os
 from dotenv import load_dotenv
+import traceback
+import sys
 
 # Load environment variables from .env file
 load_dotenv()
@@ -31,11 +33,17 @@ def analyzeStock(ticker):
     except NameError as e:
         abort(404, str(e))
     except RuntimeError as e:
-        if "FINNHUB_API_KEY" in str(e):
+        error_msg = str(e)
+        print(f"RuntimeError: {error_msg}", file=sys.stderr)
+        traceback.print_exc()
+        if "FINNHUB_API_KEY" in error_msg:
             abort(500, "Missing FINNHUB_API_KEY environment variable. Configure it on Render.")
-        abort(500, str(e))
+        abort(500, error_msg)
     except Exception as e:
-        abort(500, f"Stock analysis error: {str(e)}")
+        error_msg = str(e)
+        print(f"Exception: {error_msg}", file=sys.stderr)
+        traceback.print_exc()
+        abort(500, f"Stock analysis error: {error_msg}")
     return analysis
 
 @app.route('/analyze-text', methods=['POST'])
