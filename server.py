@@ -4,6 +4,11 @@ from analyze import analyzeText
 from flask_cors import CORS
 import json
 import requests
+import os
+from dotenv import load_dotenv
+
+# Load environment variables from .env file
+load_dotenv()
 
 app=Flask(__name__)
 CORS(app, supports_credentials=True)
@@ -24,9 +29,13 @@ def analyzeStock(ticker):
     try:
         analysis = getCompanyStockInfo(ticker)
     except NameError as e:
-        abort(404, e)
-    except:
-        abort(500, "Something went wrong running the stock analysis.")
+        abort(404, str(e))
+    except RuntimeError as e:
+        if "FINNHUB_API_KEY" in str(e):
+            abort(500, "Missing FINNHUB_API_KEY environment variable. Configure it on Render.")
+        abort(500, str(e))
+    except Exception as e:
+        abort(500, f"Stock analysis error: {str(e)}")
     return analysis
 
 @app.route('/analyze-text', methods=['POST'])

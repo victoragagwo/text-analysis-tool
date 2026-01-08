@@ -4,16 +4,16 @@ from io import BytesIO
 import json
 import nltk
 from nltk.sentiment.vader import SentimentIntensityAnalyzer
-nltk.download('vader_lexicon')
+nltk.download('vader_lexicon', quiet=True)
 sentimentAnalyzer = SentimentIntensityAnalyzer()
 from nltk.corpus import wordnet, stopwords
-nltk.download('stopwords')
+nltk.download('stopwords', quiet=True)
 stopWords = set(stopwords.words('english'))
 from nltk.stem import WordNetLemmatizer
-nltk.download('wordnet')
+nltk.download('wordnet', quiet=True)
 wordLemmatizer = WordNetLemmatizer()
 from nltk.corpus import wordnet
-nltk.download('averaged_perceptron_tagger')
+nltk.download('averaged_perceptron_tagger', quiet=True)
 import re
 from random_username.generate import generate_username
 from nltk.tokenize import word_tokenize, sent_tokenize
