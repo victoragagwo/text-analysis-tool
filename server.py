@@ -13,7 +13,7 @@ import sys
 load_dotenv()
 
 app=Flask(__name__)
-CORS(app, supports_credentials=True)
+CORS(app, origins=['http://localhost:5000', 'https://victoragagwo.github.io'])
 
 @app.route('/health', methods=['GET'])
 def healthCheck():
